@@ -131,9 +131,13 @@ def play(docu_id):
             playback_url = ('plugin://plugin.video.youtube/'
                             '?action=play_all&playlist=%s' % media.get('id'))
             return plugin.set_resolved_url(playback_url)
-    else:
-        plugin.log.warning(repr(media))
-        plugin.notify(msg=_('Not Implemented yet'))
+    elif source == 'vimeo.com':
+        if media_type == 'video':
+            playback_url = ('plugin://plugin.video.vimeo/'
+                            '?action=play_video&videoid=%s' % media.get('id'))
+            return plugin.set_resolved_url(playback_url)
+    plugin.log.warning(repr(media))
+    plugin.notify(msg=_('Not Implemented yet'))
 
 
 def __add_docus(docus):

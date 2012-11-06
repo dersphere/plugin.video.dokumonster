@@ -167,7 +167,7 @@ def __add_docus(docus):
         # FIXME: Sort methods
         #'sort_methods': ('TITLE', 'VOTES')
     }
-    if plugin.get_setting('force_viewmode_podcasts') == 'true':
+    if plugin.get_setting('force_viewmode') == 'true':
         finish_kwargs['view_mode'] = 'thumbnail'
     return plugin.finish(items, **finish_kwargs)
 

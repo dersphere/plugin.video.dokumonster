@@ -71,7 +71,7 @@ class DokuMonsterApi():
     def get_docu(self, docu_id):
         params = {'id': docu_id}
         json_data = self.__api_call(path='get_item', params=params)
-        return json_data.get('status', {}).get('items', [])[0]
+        return json_data.get('items', [])[0]
 
     def _get_items(self, **kwargs):
         params = {}
@@ -87,7 +87,7 @@ class DokuMonsterApi():
         if not 'online' in params:
             params['online'] = self.show_only_online
         json_data = self.__api_call(path='get_items', params=params)
-        items = json_data.get('status', {}).get('items', [])
+        items = json_data.get('items', [])
         total_count = int(json_data.get('total_count', 0))
         return items, total_count
 

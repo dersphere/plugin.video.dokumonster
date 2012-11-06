@@ -120,27 +120,19 @@ def show_new_docus():
 def play(docu_id):
     docu = api.get_docu(docu_id)
     plugin.log.info(repr(docu))
-    # FIXME: Replace with 'media'-Code
-    import re
-    playback_url = None
-
-    re_youtube_id = re.compile('watch\?v=(.*)')
-    m = re_youtube_id.search(docu['embed'])
-    if m:
-        video_id = m.groups(1)
-        playback_url = ('plugin://plugin.video.youtube/'
-                        '?action=play_video&videoid=%s' % video_id)
-
-    re_youtube_playlist = re.compile('playlist\?list=(.*)')
-    m = re_youtube_playlist.search(docu['embed'])
-    if m:
-        video_id = m.groups(1)
-        playback_url = ('plugin://plugin.video.youtube/'
-                        '?action=play_all&playlist=%s' % video_id)
-    if playback_url:
-        plugin.log.info('Found URL: %s' % playback_url)
-        return plugin.set_resolved_url(playback_url)
+    media = docu.get('media', {})
+    source, media_type = media.get('source'), media.get('type')
+    if source == 'youtube.com':
+        if media_type == 'video':
+            playback_url = ('plugin://plugin.video.youtube/'
+                            '?action=play_video&videoid=%s' % media.get('id'))
+            return plugin.set_resolved_url(playback_url)
+        elif media_type == 'playlist':
+            playback_url = ('plugin://plugin.video.youtube/'
+                            '?action=play_all&playlist=%s' % media.get('id'))
+            return plugin.set_resolved_url(playback_url)
     else:
+        plugin.log.warning(repr(media))
         plugin.notify(msg=_('Not Implemented yet'))
 
 
@@ -148,14 +140,16 @@ def __add_docus(docus):
     # FIXME: Pagination
     items = []
     for i, docu in enumerate(docus):
+        title = u'[COLOR red][%s°][/COLOR] %s' % (docu['fire'], docu['title'])
         item = {
-            'label': docu['title'],
+            'label': title,
             'icon': docu['thumb'],
             'info': {
                 #'count': str(i),
                 'studio': docu['username'] or '',
                 'genre': docu['tags'] or '',
                 'tagline': docu['lang'] or '',
+                'plot': docu['description'] or '',
                 #'votes': int(docu['views'] or '0'),
             },
             'path': plugin.url_for(

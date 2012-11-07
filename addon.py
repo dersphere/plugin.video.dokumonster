@@ -75,8 +75,9 @@ def show_tags():
 
 @plugin.route('/tags/<tag_id>/')
 def show_docus_by_tag(tag_id):
-    docus, total_count = api.get_docus_by_tag(tag_id)
-    return __add_docus(docus)
+    return __finish_paginate(
+        'show_docus_by_tag', api.get_docus_by_tag, tag_id=tag_id
+    )
 
 
 @plugin.route('/initals/')
@@ -95,26 +96,24 @@ def show_initials():
 
 @plugin.route('/initals/<initial>/')
 def show_docus_by_initial(initial):
-    docus, total_count = api.get_docus_by_initial(initial)
-    return __add_docus(docus)
+    return __finish_paginate(
+        'show_docus_by_initial', api.get_docus_by_initial, initial=initial
+    )
 
 
 @plugin.route('/popular_docus/')
 def show_popular_docus():
-    docus, total_count = api.get_popular_docus()
-    return __add_docus(docus)
+    return __finish_paginate('show_popular_docus', api.get_popular_docus)
 
 
 @plugin.route('/top_docus/')
 def show_top_docus():
-    docus, total_count = api.get_top_docus()
-    return __add_docus(docus)
+    return __finish_paginate('show_top_docus', api.get_top_docus)
 
 
 @plugin.route('/new_docus/')
 def show_new_docus():
-    docus, total_count = api.get_newest_docus()
-    return __add_docus(docus)
+    return __finish_paginate('show_new_docus', api.get_newest_docus)
 
 
 @plugin.route('/play/<docu_id>')
@@ -141,8 +140,42 @@ def play(docu_id):
     plugin.notify(msg=_('Not Implemented yet'))
 
 
-def __add_docus(docus):
-    # FIXME: Pagination
+def __finish_paginate(endpoint, api_func, *args, **kwargs):
+    is_update = 'page' in plugin.request.args
+    page = plugin.request.args.get('page', ['1'])[0]
+    docus, total_count = api_func(*args, page=page, **kwargs)
+    items = __format_docus(docus)
+    if int(page) > 1:
+        p = str(int(page) - 1)
+        items.insert(0, {
+            'label': '<< Page %s <<' % p,
+            'path': plugin.url_for(
+                endpoint,
+                page=p,
+                **kwargs
+            )
+        })
+    if True:
+        p = str(int(page) + 1)
+        items.append({
+            'label': '>> Page %s >>' % p,
+            'path': plugin.url_for(
+                endpoint,
+                page=p,
+                **kwargs
+            )
+        })
+    finish_kwargs = {
+        # FIXME: Sort methods
+        'sort_methods': ('UNSORTED', ),
+        'update_listing': is_update
+    }
+    if plugin.get_setting('force_viewmode') == 'true':
+        finish_kwargs['view_mode'] = 'thumbnail'
+    return plugin.finish(items, **finish_kwargs)
+
+
+def __format_docus(docus):
     items = []
     for i, docu in enumerate(docus):
         tagline = 'language: %s | views: %s | comments: %s' % (
@@ -170,13 +203,7 @@ def __add_docus(docus):
             'is_playable': True
         }
         items.append(item)
-    finish_kwargs = {
-        # FIXME: Sort methods
-        'sort_methods': ('DATE', )
-    }
-    if plugin.get_setting('force_viewmode') == 'true':
-        finish_kwargs['view_mode'] = 'thumbnail'
-    return plugin.finish(items, **finish_kwargs)
+    return items
 
 
 def __keyboard(title, text=''):

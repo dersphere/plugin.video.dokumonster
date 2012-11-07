@@ -1,1 +1,13 @@
+0.0.2
+- added fire (in red) to the docu title
+- added docu description (info-dialog)
+- added vimeo playback code
+- added setting for list view or thumbnail view
+- added date
+- added language, views, comments (info-dialog)
+- added pagination
+- added search
+- fixed api changes
+
 0.0.1
+- initial version

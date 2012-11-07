@@ -36,10 +36,8 @@ class DokuMonsterApi():
 
     USER_AGENT = 'XBMC DokuMonsterApi'
 
-    def __init__(self):
-        self.show_only_online = 1
-        self.default_count = 50
-        pass
+    def __init__(self, default_count=None):
+        self.default_count = default_count or 50
 
     def get_tags(self):
         params = {
@@ -69,6 +67,9 @@ class DokuMonsterApi():
     def get_docus_by_tag(self, tag_id, page='1'):
         return self._get_items(tag_id=tag_id, page=page)
 
+    def get_docus_by_query(self, query, page='1'):
+        return self._get_items(query=query, page=page)
+
     def get_docu(self, docu_id):
         params = {'id': docu_id}
         json_data = self.__api_call(path='get_item', params=params)
@@ -88,8 +89,6 @@ class DokuMonsterApi():
         page = params.pop('page', False)
         if page:
             params['offset'] = (int(page) - 1) * params['limit']
-        #if not 'online' in params:
-        #    params['online'] = self.show_only_online
         json_data = self.__api_call(path='get_items', params=params)
         items = json_data.get('items', [])
         total_count = int(json_data.get('total_count', 0))

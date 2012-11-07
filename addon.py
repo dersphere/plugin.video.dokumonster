@@ -22,8 +22,10 @@ from string import ascii_lowercase, digits
 from xbmcswift2 import Plugin, xbmc
 from resources.lib.api import DokuMonsterApi, NetworkError
 
+PER_PAGE = 50
+
 plugin = Plugin()
-api = DokuMonsterApi()
+api = DokuMonsterApi(default_count=PER_PAGE)
 
 STRINGS = {
     'popular_docus': 30001,
@@ -54,8 +56,9 @@ def show_root():
         {'label': _('top_docus'), 'path': plugin.url_for(
             endpoint='show_top_docus'
         )},
-        # FIXME: suche
-
+        {'label': _('search'), 'path': plugin.url_for(
+            endpoint='search'
+        )},
     )
     return plugin.finish(items)
 
@@ -114,6 +117,21 @@ def show_top_docus():
 @plugin.route('/new_docus/')
 def show_new_docus():
     return __finish_paginate('show_new_docus', api.get_newest_docus)
+
+
+@plugin.route('/search/')
+def search():
+    query = __keyboard(_('search'))
+    if query:
+        url = plugin.url_for('search_result', query=query)
+        plugin.redirect(url)
+
+
+@plugin.route('/search/<query>/')
+def search_result(query):
+    return __finish_paginate(
+        'search_result', api.get_docus_by_query, query=query
+    )
 
 
 @plugin.route('/play/<docu_id>')
@@ -193,8 +211,7 @@ def __format_docus(docus):
                 'genre': docu['tags'] or '',
                 'tagline': tagline,
                 'plot': docu['description'] or '',
-                'date': pub_date,
-                #'votes': int(docu['views'] or '0'),
+                'date': pub_date
             },
             'path': plugin.url_for(
                 endpoint='play',

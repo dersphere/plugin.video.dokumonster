@@ -17,6 +17,7 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
+from datetime import date
 from string import ascii_lowercase, digits
 from xbmcswift2 import Plugin, xbmc
 from resources.lib.api import DokuMonsterApi, NetworkError
@@ -144,16 +145,22 @@ def __add_docus(docus):
     # FIXME: Pagination
     items = []
     for i, docu in enumerate(docus):
+        tagline = 'language: %s | views: %s | comments: %s' % (
+            docu['lang'], docu['views'], docu['comments']
+        )
+        d = date.fromtimestamp(float(docu['online']))
+        pub_date = '%02d.%02d.%04d' % (d.day, d.month, d.year)
         title = u'[COLOR red][%s°][/COLOR] %s' % (docu['fire'], docu['title'])
         item = {
             'label': title,
             'icon': docu['thumb'],
             'info': {
-                #'count': str(i),
+                'count': i,
                 'studio': docu['username'] or '',
                 'genre': docu['tags'] or '',
-                'tagline': docu['lang'] or '',
+                'tagline': tagline,
                 'plot': docu['description'] or '',
+                'date': pub_date,
                 #'votes': int(docu['views'] or '0'),
             },
             'path': plugin.url_for(
@@ -165,7 +172,7 @@ def __add_docus(docus):
         items.append(item)
     finish_kwargs = {
         # FIXME: Sort methods
-        #'sort_methods': ('TITLE', 'VOTES')
+        'sort_methods': ('DATE', )
     }
     if plugin.get_setting('force_viewmode') == 'true':
         finish_kwargs['view_mode'] = 'thumbnail'

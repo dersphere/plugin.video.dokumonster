@@ -53,20 +53,21 @@ class DokuMonsterApi():
             'count': genre.get('count'),
         } for genre in json_data.get('items', [])]
 
-    def get_popular_docus(self):
-        return self._get_items(sort='views', sortorder='desc')
+    def get_popular_docus(self, page='1'):
+        return self._get_items(sort='views', sortorder='desc', page=page)
 
-    def get_top_docus(self):
-        return self._get_items(sort='fire', sortorder='desc')
+    def get_top_docus(self, page='1'):
+        return self._get_items(sort='fire', sortorder='desc', page=page)
 
-    def get_newest_docus(self):
-        return self._get_items(sort='id', sortorder='desc')
+    def get_newest_docus(self, page='1'):
+        return self._get_items(sort='id', sortorder='desc', page=page)
 
-    def get_docus_by_initial(self, initial):
-        return self._get_items(sort='title', initial=initial, sortorder='asc')
+    def get_docus_by_initial(self, initial, page='1'):
+        return self._get_items(sort='title', initial=initial,
+                               sortorder='asc', page=page)
 
-    def get_docus_by_tag(self, tag_id):
-        return self._get_items(tag_id=tag_id)
+    def get_docus_by_tag(self, tag_id, page='1'):
+        return self._get_items(tag_id=tag_id, page=page)
 
     def get_docu(self, docu_id):
         params = {'id': docu_id}
@@ -77,13 +78,16 @@ class DokuMonsterApi():
         params = {}
         valid_kwargs = (
             'sort', 'tag_id', 'query', 'initial', 'online',
-            'sortorder', 'limit', 'offset'
+            'sortorder', 'limit', 'offset', 'page'
         )
         for key, val in kwargs.items():
             if key in valid_kwargs:
                 params[key] = val
         if not 'limit' in params:
             params['limit'] = self.default_count
+        page = params.pop('page', False)
+        if page:
+            params['offset'] = (int(page) - 1) * params['limit']
         #if not 'online' in params:
         #    params['online'] = self.show_only_online
         json_data = self.__api_call(path='get_items', params=params)

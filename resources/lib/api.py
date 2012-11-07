@@ -54,16 +54,16 @@ class DokuMonsterApi():
         } for genre in json_data.get('items', [])]
 
     def get_popular_docus(self):
-        return self._get_items(sort='views', sort_order='desc')
+        return self._get_items(sort='views', sortorder='desc')
 
     def get_top_docus(self):
-        return self._get_items(sort='fire', sort_order='desc')
+        return self._get_items(sort='fire', sortorder='desc')
 
     def get_newest_docus(self):
-        return self._get_items(sort='id', sort_order='desc')
+        return self._get_items(sort='id', sortorder='desc')
 
     def get_docus_by_initial(self, initial):
-        return self._get_items(sort='title', initial=initial)
+        return self._get_items(sort='title', initial=initial, sortorder='asc')
 
     def get_docus_by_tag(self, tag_id):
         return self._get_items(tag_id=tag_id)
@@ -77,15 +77,15 @@ class DokuMonsterApi():
         params = {}
         valid_kwargs = (
             'sort', 'tag_id', 'query', 'initial', 'online',
-            'sort_order', 'limit', 'offset'
+            'sortorder', 'limit', 'offset'
         )
         for key, val in kwargs.items():
             if key in valid_kwargs:
                 params[key] = val
         if not 'limit' in params:
             params['limit'] = self.default_count
-        if not 'online' in params:
-            params['online'] = self.show_only_online
+        #if not 'online' in params:
+        #    params['online'] = self.show_only_online
         json_data = self.__api_call(path='get_items', params=params)
         items = json_data.get('items', [])
         total_count = int(json_data.get('total_count', 0))

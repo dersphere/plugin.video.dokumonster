@@ -174,7 +174,7 @@ def __finish_paginate(endpoint, api_func, *args, **kwargs):
                 **kwargs
             )
         })
-    if True:
+    if int(page) * PER_PAGE > int(total_count):
         p = str(int(page) + 1)
         items.append({
             'label': '>> Page %s >>' % p,

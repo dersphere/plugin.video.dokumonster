@@ -33,6 +33,7 @@ STRINGS = {
     'tags': 30003,
     'all': 30004,
     'top_docus': 30005,
+    'search': 30006,
     'network_error': 30200
 }
 

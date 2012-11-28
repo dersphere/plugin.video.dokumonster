@@ -141,22 +141,30 @@ def play(docu_id):
     plugin.log.info(repr(docu))
     media = docu.get('media', {})
     source, media_type = media.get('source'), media.get('type')
+    playback_url = None
     if source == 'youtube.com':
         if media_type == 'video':
-            playback_url = ('plugin://plugin.video.youtube/'
-                            '?action=play_video&videoid=%s' % media.get('id'))
-            return plugin.set_resolved_url(playback_url)
+            playback_url = (
+                'plugin://plugin.video.youtube/'
+                '?action=play_video&videoid=%s' % media.get('id')
+            )
         elif media_type == 'playlist':
-            playback_url = ('plugin://plugin.video.youtube/'
-                            '?action=play_all&playlist=%s' % media.get('id'))
-            return plugin.set_resolved_url(playback_url)
+            playback_url = (
+                'plugin://plugin.video.youtube/'
+                '?action=play_all&playlist=%s' % media.get('id').replace('PL', '')
+            )
     elif source == 'vimeo.com':
         if media_type == 'video':
-            playback_url = ('plugin://plugin.video.vimeo/'
-                            '?action=play_video&videoid=%s' % media.get('id'))
-            return plugin.set_resolved_url(playback_url)
-    plugin.log.warning(repr(media))
-    plugin.notify(msg=_('Not Implemented yet'))
+            playback_url = (
+                'plugin://plugin.video.vimeo/'
+                '?action=play_video&videoid=%s' % media.get('id')
+            )
+    if playback_url:
+        plugin.log.warning('Using playback url: %s' % playback_url)
+        return plugin.set_resolved_url(playback_url)
+    else:
+        plugin.log.warning(repr(media))
+        plugin.notify(msg=_('Not Implemented yet'))
 
 
 def __finish_paginate(endpoint, api_func, *args, **kwargs):

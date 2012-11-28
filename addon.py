@@ -219,7 +219,7 @@ def __format_docus(docus):
                 'studio': docu['username'] or '',
                 'genre': docu['tags'] or '',
                 'tagline': tagline,
-                'plot': docu['description'] or '',
+                'plot': docu['description'].replace('\n\r', '[CR]') or '',
                 'date': pub_date
             },
             'path': plugin.url_for(

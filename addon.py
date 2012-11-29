@@ -71,16 +71,16 @@ def show_tags():
         'label': '%s [%s]' % (tag.get('name'), tag.get('count')),
         'path': plugin.url_for(
             endpoint='show_docus_by_tag',
-            tag_id=tag['id']
+            tag=tag['id']
         )
     } for tag in tags]
     return plugin.finish(items)
 
 
-@plugin.route('/tags/<tag_id>/')
-def show_docus_by_tag(tag_id):
+@plugin.route('/tags/<tag>/')
+def show_docus_by_tag(tag):
     return __finish_paginate(
-        'show_docus_by_tag', api.get_docus_by_tag, tag_id=tag_id
+        'show_docus_by_tag', api.get_docus_by_tag, tag=tag
     )
 
 

@@ -18,7 +18,7 @@
 #
 
 import simplejson as json
-from urllib import urlencode, quote_plus
+from urllib import urlencode
 from urllib2 import urlopen, Request, HTTPError, URLError
 
 API_URL = 'http://dokumonster.de/api/0.1/'
@@ -64,8 +64,8 @@ class DokuMonsterApi():
         return self._get_items(sort='title', initial=initial,
                                sortorder='asc', page=page)
 
-    def get_docus_by_tag(self, tag_id, page='1'):
-        return self._get_items(tag_id=tag_id, page=page)
+    def get_docus_by_tag(self, tag, page='1'):
+        return self._get_items(tag=tag, page=page)
 
     def get_docus_by_query(self, query, page='1'):
         return self._get_items(query=query, page=page)
@@ -78,7 +78,7 @@ class DokuMonsterApi():
     def _get_items(self, **kwargs):
         params = {}
         valid_kwargs = (
-            'sort', 'tag_id', 'query', 'initial', 'online',
+            'sort', 'tag', 'query', 'initial', 'online',
             'sortorder', 'limit', 'offset', 'page'
         )
         for key, val in kwargs.items():

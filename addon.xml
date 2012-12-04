@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.doku_monster" name="dokumonster.de" version="0.0.2" provider-name="Tristan Fischer (sphere@dersphere.de)">
+<addon id="plugin.video.doku_monster" name="dokumonster.de" version="0.1.0" provider-name="Tristan Fischer (sphere@dersphere.de)">
     <requires>
         <import addon="xbmc.python" version="2.0"/>
         <import addon="script.module.simplejson" version="2.0.10"/>
@@ -14,7 +14,7 @@
         <platform>all</platform>
         <summary lang="de">Deutsche Dokus</summary>
         <summary lang="en">German documentaries</summary>
-        <description lang="de">FIXME</description>
-        <description lang="en">FIXME</description>
+        <description lang="de">Dein Online Doku Stream Archiv. Die besten deutschen Dokumentationen einfach online anschauen. Tägliche Updates!</description>
+        <description lang="en">German online documentary stream archive. The best german documentaries online. Daily updates!</description>
     </extension>
 </addon>

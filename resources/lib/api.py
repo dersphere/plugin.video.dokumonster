@@ -86,6 +86,8 @@ class DokuMonsterApi():
                 params[key] = val
         if not 'limit' in params:
             params['limit'] = self.default_count
+        if not 'online' in params:
+            params['online'] = 'true'
         page = params.pop('page', False)
         if page:
             params['offset'] = (int(page) - 1) * params['limit']

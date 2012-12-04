@@ -202,9 +202,11 @@ def __finish_paginate(endpoint, api_func, *args, **kwargs):
     return plugin.finish(items, **finish_kwargs)
 
 
-def __format_docus(docus):
+def __format_docus(docus, skip_playlists=True):
     items = []
     for i, docu in enumerate(docus):
+        if skip_playlists and docu['media']['type'] == 'playlist':
+            continue
         tagline = 'language: %s | views: %s | comments: %s' % (
             docu['lang'], docu['views'], docu['comments']
         )

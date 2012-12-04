@@ -194,7 +194,7 @@ def __finish_paginate(endpoint, api_func, *args, **kwargs):
         })
     finish_kwargs = {
         # FIXME: Sort methods
-        'sort_methods': ('UNSORTED', ),
+        'sort_methods': ('PLAYLIST_ORDER', 'DATE'),
         'update_listing': is_update
     }
     if plugin.get_setting('force_viewmode') == 'true':

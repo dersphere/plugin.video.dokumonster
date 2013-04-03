@@ -12,6 +12,11 @@
     <extension point="xbmc.addon.metadata">
         <language>en de</language>
         <platform>all</platform>
+        <website>http://dokumonster.de/</website>
+        <source>https://github.com/dersphere/plugin.video.dokumonster</source>
+        <forum></forum>
+        <email>sphere@dersphere.de</email>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
         <summary lang="de">Deutsche Dokus</summary>
         <summary lang="en">German documentaries</summary>
         <description lang="de">Dein Online Doku Stream Archiv. Die besten deutschen Dokumentationen einfach online anschauen. Tägliche Updates!</description>
